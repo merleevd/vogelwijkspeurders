@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Vogelwijkspeurders 🔍🐾</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Gaegu:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --midnight: #1a1a2e;
+    --deep-purple: #2d1b69;
+    --mystery-blue: #16213e;
+    --glow-green: #7fff00;
+    --warm-yellow: #ffd166;
+    --bright-orange: #ff6b35;
+    --soft-pink: #ff9a9e;
+    --sky-blue: #74b9ff;
+    --leaf-green: #00b894;
+    --cream: #fefae0;
+    --paper: #fff8ee;
+    --shadow: rgba(0,0,0,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Fredoka', sans-serif;
+    background: var(--cream);
+    color: #2d3436;
+    overflow-x: hidden;
+  }
+
+  /* ===== STARRY BACKGROUND ===== */
+  .stars-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: var(--warm-yellow);
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* ===== NAVIGATION ===== */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--midnight);
+    border-bottom: 3px solid var(--warm-yellow);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .nav-logo {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--warm-yellow);
+    display: flex; align-items: center; gap: 0.4rem;
+    text-shadow: 0 0 10px rgba(255,209,102,0.5);
+  }
+  .nav-links {
+    display: flex; gap: 0.3rem;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: #dfe6e9;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    background: var(--deep-purple);
+    color: var(--warm-yellow);
+  }
+
+  /* ===== PAGE SYSTEM ===== */
+  .page { display: none; position: relative; z-index: 1; }
+  .page.active { display: block; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 90vh;
+    background: linear-gradient(170deg, var(--midnight) 0%, var(--deep-purple) 40%, var(--mystery-blue) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(127,255,0,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(255,209,102,0.08) 0%, transparent 50%);
+    animation: auroraMove 12s ease-in-out infinite alternate;
+  }
+  @keyframes auroraMove {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(30px, -20px) rotate(3deg); }
+  }
+
+  .hero-badge {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid var(--warm-yellow);
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    color: var(--warm-yellow);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.8s ease-out;
+  }
+  .hero-title {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #fff;
+    line-height: 1.1;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 40px rgba(255,209,102,0.3), 0 4px 8px rgba(0,0,0,0.4);
+    animation: fadeSlideUp 0.8s ease-out 0.15s both;
+  }
+  .hero-title .highlight {
+    color: var(--warm-yellow);
+    display: block;
+  }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #b2bec3;
+    margin-top: 1rem;
+    max-width: 600px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.8s ease-out 0.3s both;
+  }
+  .hero-icons {
+    font-size: 3rem;
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.8s ease-out 0.45s both;
+  }
+  .hero-cta {
+    margin-top: 2rem;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.8s ease-out 0.6s both;
+  }
+  .hero-cta .btn {
+    font-size: 1.15rem;
+    padding: 1rem 2.5rem;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Floating paw prints */
+  .floating-paw {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.12;
+    animation: floatPaw 8s ease-in-out infinite;
+    z-index: 1;
+  }
+  @keyframes floatPaw {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(15deg); }
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-block;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary {
+    background: var(--warm-yellow);
+    color: var(--midnight);
+    box-shadow: 0 4px 15px rgba(255,209,102,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(255,209,102,0.6);
+  }
+  .btn-secondary {
+    background: var(--leaf-green);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0,184,148,0.3);
+  }
+  .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0,184,148,0.5);
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    padding: 4rem 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-family: 'Caveat', cursive;
+    font-size: 2.5rem;
+    color: var(--deep-purple);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .section-subtitle {
+    text-align: center;
+    color: #636e72;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  /* ===== WAT WE DOEN CARDS ===== */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .service-card {
+    background: var(--paper);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px var(--shadow);
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+  }
+  .service-card:nth-child(1)::before { background: var(--bright-orange); }
+  .service-card:nth-child(2)::before { background: var(--sky-blue); }
+  .service-card:nth-child(3)::before { background: var(--leaf-green); }
+  .service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--warm-yellow);
+    box-shadow: 0 8px 30px rgba(255,209,102,0.2);
+  }
+  .service-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  .service-card h3 {
+    font-size: 1.2rem;
+    color: var(--deep-purple);
+    margin-bottom: 0.5rem;
+  }
+  .service-card p {
+    color: #636e72;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* ===== TEAM PAGE ===== */
+  .team-intro {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #2d3436;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+  .team-card {
+    background: var(--paper);
+    border-radius: 24px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .team-card:hover {
+    transform: translateY(-5px) rotate(-1deg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .team-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sky-blue), var(--leaf-green));
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 15px var(--shadow);
+    overflow: hidden;
+  }
+  .team-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .team-card h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    color: var(--deep-purple);
+    margin-bottom: 0.3rem;
+  }
+  .team-role {
+    font-size: 0.85rem;
+    color: var(--bright-orange);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .team-card p {
+    font-size: 0.9rem;
+    color: #636e72;
+    line-height: 1.5;
+  }
+
+  /* ===== CONTACT / FORM PAGE ===== */
+  .form-wrapper {
+    background: var(--paper);
+    border-radius: 24px;
+    padding: 2.5rem;
+    max-width: 650px;
+    margin: 0 auto;
+    box-shadow: 0 8px 40px var(--shadow);
+    border: 2px solid rgba(45,27,105,0.08);
+    position: relative;
+  }
+  .form-wrapper::before {
+    content: '🔍';
+    position: absolute;
+    top: -20px; right: 30px;
+    font-size: 2.5rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .form-group {
+    margin-bottom: 1.3rem;
+  }
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--deep-purple);
+    font-size: 0.95rem;
+  }
+  .form-group label .hint {
+    font-weight: 400;
+    color: #b2bec3;
+    font-size: 0.85rem;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #dfe6e9;
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #fff;
+    color: #2d3436;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--warm-yellow);
+    box-shadow: 0 0 0 3px rgba(255,209,102,0.25);
+  }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .anon-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #636e72;
+    cursor: pointer;
+  }
+  .anon-toggle input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--deep-purple);
+    cursor: pointer;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 500px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    padding: 1rem;
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  .form-success.show { display: block; }
+  .form-success .checkmark {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: popIn 0.5s ease-out;
+  }
+  @keyframes popIn {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  .form-success h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
+    color: var(--deep-purple);
+  }
+  .form-success p {
+    color: #636e72;
+    margin-top: 0.5rem;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--midnight);
+    color: #b2bec3;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    border-top: 3px solid var(--warm-yellow);
+    position: relative;
+    z-index: 1;
+  }
+  footer .footer-brand {
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem;
+    color: var(--warm-yellow);
+    margin-bottom: 0.3rem;
+  }
+
+  /* ===== TAPE DECORATION ===== */
+  .tape {
+    display: inline-block;
+    background: var(--warm-yellow);
+    color: var(--midnight);
+    padding: 0.3rem 1.2rem;
+    transform: rotate(-2deg);
+    font-weight: 700;
+    font-size: 0.85rem;
+    box-shadow: 2px 2px 5px var(--shadow);
+    margin-bottom: 1rem;
+  }
+
+  /* ===== MOBILE ===== */
+  .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--warm-yellow);
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+  @media (max-width: 650px) {
+    .mobile-menu-btn { display: block; }
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%; left: 0; right: 0;
+      background: var(--midnight);
+      flex-direction: column;
+      padding: 1rem;
+      border-bottom: 3px solid var(--warm-yellow);
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 0.8rem 1rem; text-align: center; }
+    .form-wrapper { padding: 1.5rem; }
+  }
+
+  /* ===== FUN MAGNIFYING GLASS CURSOR on hero ===== */
+  .hero { cursor: crosshair; }
+
+  /* ===== NOTEBOOK LINES effect ===== */
+  .notebook-bg {
+    background-image: repeating-linear-gradient(
+      transparent, transparent 31px, #e8dfc9 31px, #e8dfc9 32px
+    );
+    background-color: var(--paper);
+    border-left: 4px solid var(--soft-pink);
+    padding-left: 2rem !important;
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars background -->
+<div class="stars-bg" id="starsBg"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">🔍 De Vogelwijkspeurders</div>
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <ul class="nav-links">
+    <li><a class="active" onclick="showPage('home', this)">Home</a></li>
+    <li><a onclick="showPage('team', this)">Ons Team</a></li>
+    <li><a onclick="showPage('contact', this)">Melding Doen</a></li>
+  </ul>
+</nav>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="floating-paw" style="top:10%;left:8%;animation-delay:0s;">🐾</div>
+    <div class="floating-paw" style="top:25%;right:12%;animation-delay:1.5s;">🐾</div>
+    <div class="floating-paw" style="bottom:20%;left:15%;animation-delay:3s;">🐾</div>
+    <div class="floating-paw" style="bottom:30%;right:8%;animation-delay:0.8s;">🔎</div>
+    <div class="floating-paw" style="top:60%;left:5%;animation-delay:2.2s;">🐈</div>
+    <div class="floating-paw" style="top:15%;right:25%;animation-delay:4s;">🐕</div>
+
+    <div class="hero-badge">🐾 Detectivebureau voor dieren 🐾</div>
+    <h1 class="hero-title">
+      De<br>
+      <span class="highlight">Vogelwijkspeurders</span>
+    </h1>
+    <p class="hero-subtitle">
+      Is jouw dier verdwenen? Heb je iets verdachts gezien in de wijk?
+      Wij lossen het op! Geen zaak te groot, geen dier te klein. 🐾🔍
+    </p>
+    <div class="hero-icons">🐕 🐈 🐰 🐹 🦜 🐢</div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" onclick="showPage('contact', document.querySelector('.nav-links a:nth-child(3)'))">
+        📞 Doe een melding!
+      </a>
+    </div>
+  </section>
+
+  <!-- Wat we doen -->
+  <section class="section">
+    <div class="tape" style="margin-left: calc(50% - 80px);">Top Secret</div>
+    <h2 class="section-title">Wat wij doen</h2>
+    <p class="section-subtitle">Wij zijn gespecialiseerd in alle dierenzaken in de Vogelwijk!</p>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🔎</div>
+        <h3>Vermiste dieren opsporen</h3>
+        <p>Is jouw huisdier weggelopen of verdwenen? Wij zoeken in de hele wijk tot we je dier gevonden hebben!</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🕵️</div>
+        <h3>Verdachte situaties</h3>
+        <p>Zie je iets raars met dieren in de buurt? Wij onderzoeken het en komen erachter wat er aan de hand is!</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🐾</div>
+        <h3>Dieren helpen</h3>
+        <p>Een gewond dier gevonden? Een vogel uit het nest gevallen? Wij weten wat we moeten doen!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hoe het werkt -->
+  <section class="section" style="background: linear-gradient(180deg, transparent, rgba(45,27,105,0.03));">
+    <h2 class="section-title">Hoe werkt het?</h2>
+    <p class="section-subtitle">In 3 simpele stappen</p>
+    <div class="services-grid" style="max-width:800px; margin: 0 auto;">
+      <div class="service-card">
+        <div class="service-icon">1️⃣</div>
+        <h3>Doe een melding</h3>
+        <p>Vul ons formulier in met alle informatie over je dier of de situatie.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">2️⃣</div>
+        <h3>Wij onderzoeken</h3>
+        <p>Ons team gaat meteen aan de slag om aanwijzingen te verzamelen!</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">3️⃣</div>
+        <h3>Zaak opgelost!</h3>
+        <p>We houden je op de hoogte en laten je weten wat we gevonden hebben.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ==================== TEAM PAGE ==================== -->
+<div class="page" id="page-team">
+  <section class="section">
+    <div class="tape" style="margin-left: calc(50% - 70px);">Geheim!</div>
+    <h2 class="section-title">Ons Team</h2>
+    <p class="section-subtitle">De dapperste detectives van de Vogelwijk!</p>
+
+    <p class="team-intro">
+      Wij zijn een groep vriendinnen die samen mysteries oplossen in de Vogelwijk.
+      Onze specialiteit? Alles wat met dieren te maken heeft! 🐾
+    </p>
+
+    <!-- INSTRUCTIE: Vervang de emoji's door echte foto's!
+         Zet een <img src="foto.jpg" alt="naam"> in de team-photo div,
+         en verwijder de emoji die er nu in staat. -->
+
+    <div class="team-grid">
+
+      <div class="team-card">
+        <div class="team-photo">🕵️‍♀️</div>
+        <h3>Merle</h3>
+        <div class="team-role">Detective</div>
+        <p>Hier kun je iets over jezelf schrijven! Bijvoorbeeld wat je leuk vindt aan speurwerk.</p>
+      </div>
+
+      <div class="team-card">
+        <div class="team-photo">🔍</div>
+        <h3>Naam vriendin</h3>
+        <div class="team-role">Sporenzoeker</div>
+        <p>Schrijf hier iets over deze detective!</p>
+      </div>
+
+      <div class="team-card">
+        <div class="team-photo">📋</div>
+        <h3>Naam vriendin</h3>
+        <div class="team-role">Dierenexpert</div>
+        <p>Schrijf hier iets over deze detective!</p>
+      </div>
+
+      <!-- MEER TEAMLEDEN? Kopieer een team-card blok en plak het hieronder! -->
+
+    </div>
+  </section>
+</div>
+
+<!-- ==================== CONTACT PAGE ==================== -->
+<div class="page" id="page-contact">
+  <section class="section">
+    <h2 class="section-title">Melding doen</h2>
+    <p class="section-subtitle">Heb je ons nodig? Vul het formulier in en wij gaan aan de slag! 🔎</p>
+
+    <div class="form-wrapper">
+      <!-- INSTRUCTIE: Verander het e-mailadres hieronder naar jullie eigen adres! -->
+      <form id="meldingForm" action="https://formsubmit.co/merle@mjvd.nl" method="POST">
+
+        <!-- FormSubmit configuratie -->
+        <input type="hidden" name="_subject" value="🐾 Nieuwe melding bij De Vogelwijkspeurders!">
+        <input type="hidden" name="_captcha" value="true">
+        <input type="hidden" name="_template" value="box">
+        <!-- Verander dit naar de URL van je website als je die hebt: -->
+        <input type="hidden" name="_next" value="">
+        <!-- Honeypot tegen spam -->
+        <input type="text" name="_honey" style="display:none">
+
+        <!-- Anoniem toggle -->
+        <label class="anon-toggle">
+          <input type="checkbox" id="anonCheck" onchange="toggleAnon()">
+          Ik wil anoniem blijven (mijn naam wordt niet gedeeld)
+        </label>
+
+        <!-- Naam & Leeftijd -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="naam">Naam</label>
+            <input type="text" id="naam" name="Naam" placeholder="Jouw naam" required>
+          </div>
+          <div class="form-group">
+            <label for="leeftijd">Leeftijd</label>
+            <input type="number" id="leeftijd" name="Leeftijd" placeholder="bijv. 9" min="1" max="120">
+          </div>
+        </div>
+
+        <!-- Adres -->
+        <div class="form-group">
+          <label for="adres">Adres in de wijk <span class="hint">(straat + huisnummer)</span></label>
+          <input type="text" id="adres" name="Adres" placeholder="bijv. Meeuwenlaan 12">
+        </div>
+
+        <!-- Dier beschrijving -->
+        <div class="form-group">
+          <label for="dier">Beschrijving van het dier 🐾</label>
+          <textarea id="dier" name="Beschrijving dier" placeholder="Wat voor dier is het? Welke kleur? Hoe groot? Heeft het een halsband of chip? Hoe heet het dier?"></textarea>
+        </div>
+
+        <!-- Situatie -->
+        <div class="form-group">
+          <label for="situatie">Wat is er aan de hand? 🕵️</label>
+          <textarea id="situatie" name="Situatie" placeholder="Beschrijf wat er gebeurd is of wat je gezien hebt." required></textarea>
+        </div>
+
+        <!-- Locatie & Wanneer -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="locatie">Waar moeten we zoeken? 📍</label>
+            <input type="text" id="locatie" name="Locatie" placeholder="bijv. Bij de speeltuin">
+          </div>
+          <div class="form-group">
+            <label for="wanneer">Wanneer? 🕐</label>
+            <input type="text" id="wanneer" name="Wanneer" placeholder="bijv. Gisteren om 16:00">
+          </div>
+        </div>
+
+        <!-- Opmerkingen -->
+        <div class="form-group">
+          <label for="opmerkingen">Verdere opmerkingen of tips 💡</label>
+          <textarea id="opmerkingen" name="Opmerkingen" placeholder="Heb je nog andere tips of informatie die ons kan helpen?"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-btn">🐾 Verstuur melding!</button>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="checkmark">✅</div>
+        <h3>Melding verstuurd!</h3>
+        <p>Bedankt! De Vogelwijkspeurders gaan ermee aan de slag! 🔍🐾</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-brand">🔍 De Vogelwijkspeurders 🐾</div>
+  <p>Geen zaak te groot, geen dier te klein!</p>
+  <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.6;">© De Vogelwijkspeurders — Vogelwijk</p>
+</footer>
+
+<script>
+  // Generate stars
+  const starsBg = document.getElementById('starsBg');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+    starsBg.appendChild(star);
+  }
+
+  // Page navigation
+  function showPage(pageId, clickedLink) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    if (clickedLink) clickedLink.classList.add('active');
+    document.querySelector('.nav-links').classList.remove('open');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Anonymous toggle
+  function toggleAnon() {
+    const checked = document.getElementById('anonCheck').checked;
+    const naamInput = document.getElementById('naam');
+    if (checked) {
+      naamInput.value = 'Anoniem';
+      naamInput.disabled = true;
+      naamInput.style.opacity = '0.5';
+    } else {
+      naamInput.value = '';
+      naamInput.disabled = false;
+      naamInput.style.opacity = '1';
+    }
+  }
+</script>
+</body>
+</html>
